@@ -1,0 +1,11 @@
+{
+  "files.associations": {
+    "*.prisma": "prisma"
+  },
+  "prisma.enableLanguageServer": true,
+  "prisma.formatOnSave": true,
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma",
+    "editor.formatOnSave": true
+  }
+}
