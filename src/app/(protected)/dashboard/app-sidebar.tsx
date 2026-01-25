@@ -1,10 +1,12 @@
 'use client'
 
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
-import { Bot, CreditCard, LayoutDashboardIcon, Presentation } from "lucide-react"
+import { Bot, CreditCard, LayoutDashboardIcon, Plus, Presentation } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import Image from "next/image"
 
 const items = [
     {
@@ -48,7 +50,14 @@ export function AppSidebar() {
     return (
         <Sidebar collapsible="icon" variant="floating">
             <SidebarHeader>
-                Logo
+                <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
+                        <Image src='/logo.png' alt="logo" width={60} height={60} className="scale-150" />
+                    </div>
+                    <h1 className="text-xl font-bold text-primary/80">
+                        DevRecall
+                    </h1>
+                </div>
             </SidebarHeader> 
             <SidebarContent>
                 <SidebarGroup>
@@ -98,14 +107,28 @@ export function AppSidebar() {
                                                     {project.name[0]}
 
                                                 </div>
+                                                <span>{project.name}</span>
                                             </div>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
                                 )
                             })}
+                            <div className="h2"></div>
+                            <SidebarMenuItem>
+                                <Link href='/create'>
+                                    <Button size='sm' variant={'outline'} className="w-fit">
+                                        <Plus/>
+                                        Create Project
+                                    </Button>
+                                </Link>
+                            </SidebarMenuItem>
+
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
+
+
+
             </SidebarContent>
         </Sidebar>
     )
