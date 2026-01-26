@@ -1,6 +1,6 @@
 'use client'
 
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
 import { Bot, CreditCard, LayoutDashboardIcon, Plus, Presentation } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -47,6 +47,7 @@ const projects = [
 
 export function AppSidebar() {
     const pathname = usePathname()
+    const {open} = useSidebar()
     return (
         <Sidebar collapsible="icon" variant="floating">
             <SidebarHeader>
@@ -54,9 +55,11 @@ export function AppSidebar() {
                     <div className="w-10 h-10 flex items-center justify-center overflow-hidden">
                         <Image src='/logo.png' alt="logo" width={60} height={60} className="scale-150" />
                     </div>
-                    <h1 className="text-xl font-bold text-primary/80">
-                        DevRecall
-                    </h1>
+                    {open && (
+                        <h1 className="text-xl font-bold text-primary/80">
+                            DevRecall
+                        </h1>
+                    )}
                 </div>
             </SidebarHeader> 
             <SidebarContent>
