@@ -2,6 +2,7 @@
 import { Input } from '@/components/ui/input'
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { Button } from '@/components/ui/button'
 
 type FormInput = {
     repoUrl: string
@@ -13,7 +14,7 @@ const CreatePage = () => {
     const {register, handleSubmit, reset} = useForm<FormInput>()
 
     function onSubmit(data: FormInput) {
-        window.alert(data)
+        window.alert(JSON.stringify(data, null, 2))
         return true
     }
 
@@ -41,14 +42,18 @@ const CreatePage = () => {
                         <Input  
                         {...register('repoUrl', { required: true})}
                         placeholder='Github URL'
+                        type='url'
                         required
                         />
                         <div className="h-2"></div>
                         <Input  
                         {...register('githubToken')}
                         placeholder='Github Token (optional)'
-                        required
                         />
+                        <div className="h-4"></div>
+                        <Button type='submit'>
+                            Create Project
+                        </Button>
                     </form>
                 </div>
             </div>
