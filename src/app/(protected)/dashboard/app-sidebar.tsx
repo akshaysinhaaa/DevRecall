@@ -117,7 +117,9 @@ export function AppSidebar() {
                                 )
                             })}
                             <div className="h2"></div>
-                            <SidebarMenuItem>
+
+                            {open && (
+                                <SidebarMenuItem>
                                 <Link href='/create'>
                                     <Button size='sm' variant={'outline'} className="w-fit">
                                         <Plus/>
@@ -125,13 +127,10 @@ export function AppSidebar() {
                                     </Button>
                                 </Link>
                             </SidebarMenuItem>
-
+                            )}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
-
-
-
             </SidebarContent>
         </Sidebar>
     )
