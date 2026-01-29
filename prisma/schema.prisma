@@ -23,6 +23,8 @@ model User {
     email String @unique
 
     credits Int @default(150)
+
+    userToProjects UserToProject[]
 }
 
 model Project {
@@ -34,6 +36,8 @@ model Project {
     githubUrl String?
 
     deletedAt DateTime?
+
+    userToProjects UserToProject[]
 }
 
 model UserToProject{
