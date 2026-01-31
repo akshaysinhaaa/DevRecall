@@ -25,6 +25,7 @@ const CreatePage = () => {
         }, {
             onSuccess: () => {
                 toast.success('Project created successfully')
+                reset()
             },
             onError: () => {
                 toast.error('Failed to create project')
@@ -66,7 +67,7 @@ const CreatePage = () => {
                         placeholder='Github Token (optional)'
                         />
                         <div className="h-4"></div>
-                        <Button type='submit'>
+                        <Button type='submit' disabled={createProject.isPending}>
                             Create Project
                         </Button>
                     </form>
