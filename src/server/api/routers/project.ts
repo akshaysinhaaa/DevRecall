@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { ensureUserInDb } from "@/server/sync-user";
 
 export const projectRouter = createTRPCRouter({
   createProject: protectedProcedure
@@ -11,18 +12,18 @@ export const projectRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      const dbUserId = await ensureUserInDb(ctx.user.userId!);
       const project = await ctx.db.project.create({
         data: {
           githubUrl: input.githubUrl,
           name: input.name,
           userToProjects: {
             create: {
-              userId: ctx.user.userId!,
-
-            }
-          }
-        }
-      })
+              userId: dbUserId,
+            },
+          },
+        },
+      });
       return project;
     })
 });
