@@ -4,6 +4,7 @@ import {useLocalStorage} from 'usehooks-ts'
 
 const useProject = () => {
   const {data: projects} = api.project.getProjects.useQuery()
+  const {projectId, setProject} = useLocalStorage('devrecall-projectId', '')
   return {
     projects
   }
