@@ -37,7 +37,7 @@ const items = [
 export function AppSidebar() {
     const pathname = usePathname()
     const {open} = useSidebar()
-    const { projects, projectId } = useProject()
+    const { projects, projectId, setProjectId } = useProject()
     return (
         <Sidebar collapsible="icon" variant="floating">
             <SidebarHeader>
@@ -85,11 +85,16 @@ export function AppSidebar() {
                     </SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {projects?.map((project: { id: string; name: string }) => {
+                            {projects
+                                ?.filter((project: { id: string }, index: number, self: { id: string }[]) => 
+                                    // Remove duplicates by keeping only the first occurrence of each id
+                                    index === self.findIndex((p: { id: string }) => p.id === project.id)
+                                )
+                                .map((project: { id: string; name: string }) => {
                                 return (
-                                    <SidebarMenuItem key={project.name}>
+                                    <SidebarMenuItem key={project.id}>
                                         <SidebarMenuButton asChild>
-                                            <div>
+                                            <div onClick={() => setProjectId(project.id)}>
                                                 <div className={cn(
                                                     'rounded-sm border size-6 flex items-center justify-center text-sm bg-white text-primary ',
                                                     {

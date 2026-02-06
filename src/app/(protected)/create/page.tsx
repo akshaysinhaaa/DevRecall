@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { api } from '@/trpc/react'
+import { useRouter } from 'next/navigation'
 
 
 type FormInput = {
@@ -15,6 +16,8 @@ type FormInput = {
 
 const CreatePage = () => {
     const {register, handleSubmit, reset} = useForm<FormInput>()
+    const utils = api.useUtils()
+    const router = useRouter()
     const createProject = api.project.createProject.useMutation()
 
     function onSubmit(data: FormInput) {
@@ -23,9 +26,32 @@ const CreatePage = () => {
             name: data.projectName,
             githubToken: data.githubToken
         }, {
-            onSuccess: () => {
+            onSuccess: async (newProject) => {
                 toast.success('Project created successfully')
                 reset()
+                
+                // Optimistically update the cache immediately
+                // This will show the project in the sidebar right away
+                utils.project.getProjects.setData(undefined, (oldData) => {
+                    if (!oldData) return [newProject]
+                    
+                    // Check if project already exists to avoid duplicates
+                    const exists = oldData.some((p: { id: string }) => p.id === newProject.id)
+                    if (exists) {
+                        // Project already exists, return existing data
+                        return oldData
+                    }
+                    
+                    // Add new project to the beginning of the array
+                    return [newProject, ...oldData]
+                })
+                
+                // Invalidate after a delay to sync with server
+                // The delay ensures the database transaction is fully committed
+                // When invalidate refetches, React Query will replace the cache with server data
+                setTimeout(async () => {
+                    await utils.project.getProjects.invalidate()
+                }, 2000)
             },
             onError: () => {
                 toast.error('Failed to create project')
