@@ -130,4 +130,3 @@ export function AppSidebar() {
     )
 }
 
-//2

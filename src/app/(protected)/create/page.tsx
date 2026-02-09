@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { api } from '@/trpc/react'
 import { useRouter } from 'next/navigation'
+import useRefetch from '@/hooks/use-refetch'
 
 
 type FormInput = {
@@ -19,6 +20,7 @@ const CreatePage = () => {
     const utils = api.useUtils()
     const router = useRouter()
     const createProject = api.project.createProject.useMutation()
+    const refetch = useRefetch()
 
     function onSubmit(data: FormInput) {
         createProject.mutate({
@@ -28,30 +30,8 @@ const CreatePage = () => {
         }, {
             onSuccess: async (newProject) => {
                 toast.success('Project created successfully')
+                refetch()
                 reset()
-                
-                // Optimistically update the cache immediately
-                // This will show the project in the sidebar right away
-                utils.project.getProjects.setData(undefined, (oldData) => {
-                    if (!oldData) return [newProject]
-                    
-                    // Check if project already exists to avoid duplicates
-                    const exists = oldData.some((p: { id: string }) => p.id === newProject.id)
-                    if (exists) {
-                        // Project already exists, return existing data
-                        return oldData
-                    }
-                    
-                    // Add new project to the beginning of the array
-                    return [newProject, ...oldData]
-                })
-                
-                // Invalidate after a delay to sync with server
-                // The delay ensures the database transaction is fully committed
-                // When invalidate refetches, React Query will replace the cache with server data
-                setTimeout(async () => {
-                    await utils.project.getProjects.invalidate()
-                }, 2000)
             },
             onError: () => {
                 toast.error('Failed to create project')
